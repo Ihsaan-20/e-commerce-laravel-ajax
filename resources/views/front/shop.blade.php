@@ -74,33 +74,9 @@
                 <div class="sub-title mt-5">
                     <h2>Price</h3>
                 </div>
-                
                 <div class="card">
                     <div class="card-body">
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                $0-$100
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                            <label class="form-check-label" for="flexCheckChecked">
-                                $100-$200
-                            </label>
-                        </div>                 
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                            <label class="form-check-label" for="flexCheckChecked">
-                                $200-$500
-                            </label>
-                        </div> 
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                            <label class="form-check-label" for="flexCheckChecked">
-                                $500+
-                            </label>
-                        </div>                 
+                        <input type="text" class="js-range-slider" name="my_range" value="" />                
                     </div>
                 </div>
             </div>
@@ -109,14 +85,11 @@
                     <div class="col-12 pb-1">
                         <div class="d-flex align-items-center justify-content-end mb-4">
                             <div class="ml-2">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown">Sorting</button>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#">Latest</a>
-                                        <a class="dropdown-item" href="#">Price High</a>
-                                        <a class="dropdown-item" href="#">Price Low</a>
-                                    </div>
-                                </div>                                    
+                                <select name="sort" id="sort" class="form-control">
+                                    <option value="latest" {{ ($sort == 'latest') ? 'selected' : '' }}>Latest</option>
+                                    <option value="price_desc" {{ ($sort == 'price_desc') ? 'selected' : '' }}>Price High</option>
+                                    <option value="price_asc" {{ ($sort == 'price_asc') ? 'selected' : '' }}>Price Low</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -181,24 +154,59 @@
 @endsection
 
 @section('customJs')
-    <script>
-        // alert('workin');
-        $('.brand-label').change(function(){
+<script>
+    // ion-range-slider
+    rangeSlider = $(".js-range-slider").ionRangeSlider({
+        type: "double",
+        min: 0,
+        max: 1000,
+        from: {{ ($priceMin) }},
+        step: 10,
+        to:  {{ ($priceMax) }},
+        skin: "round",
+        max_postfix: "+",
+        prefix: "$",
+        onFinish: function () {
             applyFilter();
+        },
+    });
+
+    // Saving its instance to var
+    var slider = $(".js-range-slider").data("ionRangeSlider"); // Fixed the selector here
+
+    // alert('workin');
+    $('.brand-label').change(function () {
+        applyFilter();
+    });
+
+    $('#sort').change(function () {
+        applyFilter();
+    });
+
+    function applyFilter() {
+        var brands = [];
+
+        $('.brand-label').each(function () {
+            if ($(this).is(':checked') == true) {
+                brands.push($(this).val());
+            }
         });
 
-        function applyFilter(){
-            var brands = [];
-            
-            $('.brand-label').each(function(){
-                if ($(this).is(':checked') == true){
-                    brands.push($(this).val());
-                }
-            });
+        var url = '{{ url()->current() }}?';
 
-            console.log(brands.toString());
-            var url = '{{ url()->current() }}?';
-            window.location.href = url+'&brand='+brands.toString();
+        //brand's filter
+        if (brands.length > 0){
+            url += '&brand=' + brands.toString();
         }
-    </script>
+
+        // ion range slider for price
+        url += '&price_min=' + slider.result.from + '&price_max=' + slider.result.to;
+        
+        // sort filter
+        url += '&sort=' + $('#sort').val();
+
+        window.location.href = url;
+    }
+</script>
+
 @endsection

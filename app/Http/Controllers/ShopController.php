@@ -50,14 +50,56 @@ class ShopController extends Controller
                 $subCategorySelected = $subcategory->id;
             }
 
+            // Apply filter on checkbox;
             if(!empty($request->get('brand'))){
                 $brandsArray = explode(',', $request->get('brand'));
+                $products = $products->whereIn('brand_id', $brandsArray);
+            }
+
+            // Apply filders on price range with ion-ranger-slider;
+            if ($request->get('price_max') != '' && $request->get('price_min') != ''){
+                if($request->get('price_max') == 1000 ){
+                    $products = $products->whereBetween('price', [intval($request->get('price_min')),1000000]);
+                }else{
+                    $products = $products->whereBetween('price', [intval($request->get('price_min')), intval($request->get('price_max'))]);
+                }
             }
             
+            $priceMax = (intval($request->get('price_max')) == 0 ) ? 1000 : $request->get('price_max');
+            $priceMin = intval($request->get('price_min'));
+            
+            // sort by filter
+            // if ($request->get('sort') != ''){
+            //     if ($request->get('sort') == 'latest'){
+            //         $products = $products->orderBy('id', 'DESC');
+            //     }else if($request->get('sort') == 'price_asc'){
+            //         $products = $products->orderBy('price', 'ASC');
+            //     }else{
+            //         $products = $products->orderBy('price', 'DESC');
+            //     }
+            // }else{
+            //     $products = $products->orderBy('id', 'DESC');
+            // }
+            
+            $sort = $request->get('sort');
+
+            switch ($sort) {
+                case 'latest':
+                    $products = $products->orderBy('id', 'DESC');
+                    break;
+                case 'price_asc':
+                    $products = $products->orderBy('price', 'ASC'); // Change 'id' to the actual column for price
+                    break;
+                default:
+                    $products = $products->orderBy('price', 'DESC');
+                    break;
+            }
+
+
             $products = $products->orderBy('id','DESC')->get();
             // $products = $products;
 
-            return view('front.shop', compact('categories', 'brands', 'products','categorySelected','subCategorySelected','brandsArray'));
+            return view('front.shop', compact('categories', 'brands', 'products','categorySelected','subCategorySelected','brandsArray','priceMax','priceMin','sort'));
 
         }//end index method;
 
