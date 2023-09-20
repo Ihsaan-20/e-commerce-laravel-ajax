@@ -42,11 +42,27 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3">
+                                            <label for="short_description">Short Description<span class="text-danger">*</span></label>
+                                            <textarea name="short_description" id="short_description" cols="30" rows="10" class="summernote" placeholder="short_Description">{{$products->short_description}}</textarea>
+                                            <p class="error"></p>
+                                        </div>
+                                    </div>   
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
                                             <label for="description">Description<span class="text-danger">*</span></label>
                                             <textarea name="description" id="description" cols="30" rows="10" class="summernote" placeholder="Description">{{$products->description}}</textarea>
                                             <p class="error"></p>
                                         </div>
-                                    </div>                                            
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="shipping_return">Shipping & Return<span class="text-danger">*</span></label>
+                                            <textarea name="shipping_return" id="shipping_return" cols="30" rows="10" class="summernote">{{$products->shipping_return}}</textarea>
+                                            <p class="error"></p>
+                                        </div>
+                                    </div>   
+
                                 </div>
                             </div>	                                                                      
                         </div>

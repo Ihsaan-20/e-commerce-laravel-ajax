@@ -20,7 +20,11 @@ use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
+    public function oky(){
+        return "working";
+    }
     public function index(Request $request){
+        // return "working"; exit();
         // get products table data with relation product images table [ hasMany relationship ];
         $products = Product::latest()->with('product_images');
 
@@ -77,6 +81,8 @@ class ProductController extends Controller
         $product->track_qty = $request->track_qty;
         $product->qty = $request->qty;
         $product->status = $request->status;
+        $product->short_description = $request->short_description;
+        $product->shipping_return = $request->shipping_return;
         $product->save();
 
         // Save Gallary pics;
@@ -189,6 +195,8 @@ class ProductController extends Controller
             $product->track_qty = $request->track_qty;
             $product->qty = $request->qty;
             $product->status = $request->status;
+            $product->short_description = $request->short_description;
+            $product->shipping_return = $request->shipping_return;
             $product->save();
 
             Session::flash('success', 'Product updated successfully');

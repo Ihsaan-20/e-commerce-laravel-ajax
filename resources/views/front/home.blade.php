@@ -107,6 +107,8 @@
                         <div class="left">
                             @if ($category->image != "")
                             <img src="{{ asset('uploads/category/thumb/'.$category->image) }}" alt="category-image" class="img-fluid">                                    
+                            @else
+                                <img class="card-img-top" src="{{asset('admin-asset/img/default-150x150.png')}}" alt="">
                             @endif
                         </div>
                         <div class="right">
@@ -137,7 +139,7 @@
                 <div class="col-md-3">
                     <div class="card product-card">
                         <div class="product-image position-relative">
-                            <a href="" class="product-img">
+                            <a href="{{route('front.slug', $product->slug)}}" class="product-img">
                                 @if (!empty($productImage->image))
                                     <img class="card-img-top" src="{{ asset('uploads/product/small/'.$productImage->image) }}" alt="">
                                 @else
@@ -184,7 +186,7 @@
                 <div class="col-md-3">
                     <div class="card product-card">
                         <div class="product-image position-relative">
-                            <a href="" class="product-img">
+                            <a href="{{route('front.slug', $product->slug)}}" class="product-img">
                                 @if (!empty($productImage->image))
                                     <img class="card-img-top" src="{{ asset('uploads/product/small/'.$productImage->image) }}" alt="">
                                 @else

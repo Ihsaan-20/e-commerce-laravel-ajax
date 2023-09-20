@@ -39,15 +39,23 @@ class ShopController extends Controller
             // Apply filter for categories if categorySlug is provided
             if (!is_null($categorySlug)) {
                 $category = Category::where('slug', $categorySlug)->first();
-                $products = $products->where('category_id',$category->id);
-                $categorySelected = $category->id;
+        
+                // Check if $category is not null
+                if ($category) {
+                    $products = $products->where('category_id', $category->id);
+                    $categorySelected = $category->id;
+                }
             }
 
             // Apply filter for subcategories if subCategorySlug is provided
             if (!is_null($subCategorySlug)) {
                 $subcategory = subCategory::where('slug', $subCategorySlug)->first();
-                $products = $products->where('sub_category_id',$subcategory->id);
-                $subCategorySelected = $subcategory->id;
+        
+                // Check if $subcategory is not null
+                if ($subcategory) {
+                    $products = $products->where('sub_category_id', $subcategory->id);
+                    $subCategorySelected = $subcategory->id;
+                }
             }
 
             // Apply filter on checkbox;
@@ -96,11 +104,22 @@ class ShopController extends Controller
             }
 
 
-            $products = $products->orderBy('id','DESC')->get();
-            // $products = $products;
+            $products = $products->orderBy('id','DESC');
+            $products = $products->paginate(6);
 
             return view('front.shop', compact('categories', 'brands', 'products','categorySelected','subCategorySelected','brandsArray','priceMax','priceMin','sort'));
 
         }//end index method;
+
+    public function productslug($slug){
+            // dd($slug);
+            $products = Product::where('slug', $slug)->with('product_images')->first();
+            if($products == NULL){
+                abort(404);
+            }
+
+            return view('front.product', compact('products'));
+
+    }//end method;
 
 }

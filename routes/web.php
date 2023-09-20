@@ -34,6 +34,8 @@ Route::get('/',[FrontController::class,'home'])->name('front.home');
 // ShopController Route;
 // Route::get('/shop',[ShopController::class,'index'])->name('front.shop');
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}',[ShopController::class,'index'])->name('front.shop');
+Route::get('/productslug/{slug}/',[ShopController::class,'productslug'])->name('front.slug');
+
 
 
 // Route::get('/', function () {
@@ -84,7 +86,7 @@ Route::middleware(['auth','role:admin'])->group(function () {
     Route::put('/brand/{id}/update',[BrandController::class,'update'])->name('brand.update');
     Route::delete('/brand/{id}/delete',[BrandController::class,'destory'])->name('brand.delete');
 
-    // // Product Routes;
+    // // slug Routes;
     Route::get('/product/index',[ProductController::class,'index'])->name('product.index');
     Route::get('/product/create',[ProductController::class,'create'])->name('product.create');
     Route::post('/product/store',[ProductController::class,'store'])->name('product.store');
